@@ -37,8 +37,8 @@ function App() {
     <div className="App" style={{ backgroundColor: `hsl(${cor}, 50%, 50%)` }}>
       <div className="container">
         {link && <img src={link} alt="random dog" onError={() => request()} />}
-        <div className="button-container">
-          {loading ? <div className="loader" /> : <button onClick={request} className="btn">OUTRO!!</button>}
+        <div onClick={request} className="button-container">
+          {loading ? <div className="loader" /> : <button  className="btn">OUTRO!!</button>}
         </div>
         
         
