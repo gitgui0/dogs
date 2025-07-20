@@ -1,23 +1,48 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from "react";
 import './App.css';
+import axios from "axios";
 
 function App() {
+  const [cor, setCor] = useState(0);
+  const [link, setLink] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDog = async () => {
+      await request();
+    };
+    fetchDog();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCor(prev => (prev === 360 ? 0 : prev + 30));
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
+
+  async function request() {
+    let newUrl;
+    setLoading(true);
+    do {
+      const res = await axios.get("https://random.dog/woof.json");
+      newUrl = res.data.url;
+    } while (!newUrl.match(/\.(jpg|jpeg|png|gif)$/i));
+
+    setLink(newUrl);
+    setLoading(false);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={{ backgroundColor: `hsl(${cor}, 50%, 50%)` }}>
+      <div className="container">
+        {link && <img src={link} alt="random dog" onError={() => request()} />}
+        <div className="button-container">
+          {loading ? <div className="loader" /> : <button onClick={request} className="btn">OUTRO!!</button>}
+        </div>
+        
+        
+      </div>
     </div>
   );
 }
